@@ -126,6 +126,13 @@ void parse_reader_params(const char *reader_params_str,
       params->obj_size_field = (int)strtol(value, &end, 0);
       if (strlen(end) > 2)
         ERROR("param parsing error, find string \"%s\" after number\n", end);
+    } else if (strcasecmp(key, "obj-mass-col") == 0 ||
+               strcasecmp(key, "obj-mass-field") == 0 ||
+               strcasecmp(key, "mass-col") == 0 ||
+               strcasecmp(key, "mass-field") == 0) {
+      params->obj_mass_field = (int)strtol(value, &end, 0);
+      if (strlen(end) > 2)
+        ERROR("param parsing error, find string \"%s\" after number\n", end);
     } else if (strcasecmp(key, "cnt-col") == 0 ||
                strcasecmp(key, "cnt-field") == 0) {
       params->cnt_field = (int)strtol(value, &end, 0);

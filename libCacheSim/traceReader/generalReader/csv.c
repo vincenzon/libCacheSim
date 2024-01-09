@@ -216,6 +216,11 @@ static inline void csv_cb1(void *s, size_t len, void *data) {
     if (req->obj_size == 0 && end == s) {
       ERROR("csvReader obj_size is not a number: \"%s\"\n", (char *)s);
     }
+  } else if (csv_params->curr_field_idx == csv_params->obj_mass_field_idx) {
+    req->obj_mass = (double)strtof((char *)s, &end);
+    if (req->obj_mass == 0.0 && end == s) {
+      ERROR("csvReader obj_mass is not a number: \"%s\"\n", (char *)s);
+    }
   } else if (csv_params->curr_field_idx == csv_params->cnt_field_idx) {
     reader->n_req_left = (uint64_t)strtoull((char *)s, &end, 0) - 1;
   }
@@ -254,6 +259,7 @@ void csv_setup_reader(reader_t *const reader) {
   csv_params->time_field_idx = init_params->time_field;
   csv_params->obj_id_field_idx = init_params->obj_id_field;
   csv_params->obj_size_field_idx = init_params->obj_size_field;
+  csv_params->obj_mass_field_idx = init_params->obj_mass_field;
   csv_params->cnt_field_idx = init_params->cnt_field;
   csv_params->csv_parser =
       (struct csv_parser *)malloc(sizeof(struct csv_parser));

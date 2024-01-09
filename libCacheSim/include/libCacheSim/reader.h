@@ -44,6 +44,7 @@ typedef struct {
   int time_field;
   int obj_id_field;
   int obj_size_field;
+  int obj_mass_field;
   int op_field;
   int ttl_field;
   int cnt_field;
@@ -140,6 +141,7 @@ static inline void set_default_reader_init_params(reader_init_param_t *params) {
   params->time_field = 0;
   params->obj_id_field = 0;
   params->obj_size_field = 0;
+  params->obj_mass_field = 0;
   params->op_field = 0;
   params->ttl_field = 0;
   params->next_access_vtime_field = 0;

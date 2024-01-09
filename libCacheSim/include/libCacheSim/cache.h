@@ -64,6 +64,8 @@ typedef int64_t (*cache_get_occupied_byte_func_ptr)(const cache_t *);
 
 typedef int64_t (*cache_get_n_obj_func_ptr)(const cache_t *);
 
+typedef double (*cache_get_total_mass_func_ptr)(const cache_t *);
+
 typedef void (*cache_print_cache_func_ptr)(const cache_t *);
 
 // #define EVICTION_AGE_ARRAY_SZE 40
@@ -80,6 +82,7 @@ typedef struct {
 
   int64_t n_obj;
   int64_t occupied_byte;
+  double total_mass;
   int64_t cache_size;
 
   /* current trace time, used to determine obj expiration */
@@ -106,6 +109,8 @@ struct cache {
   cache_to_evict_func_ptr to_evict;
   cache_get_occupied_byte_func_ptr get_occupied_byte;
   cache_get_n_obj_func_ptr get_n_obj;
+  cache_get_total_mass_func_ptr get_total_mass;
+  
   cache_print_cache_func_ptr print_cache;
 
   admissioner_t *admissioner;
@@ -124,6 +129,10 @@ struct cache {
   // use cache->get_occupied_byte to obtain the number of objects in the cache
   // do not use this variable directly
   int64_t occupied_byte;
+
+  // use cache->get_total_mass to obtain the mass of objects in the cache
+  // do not use this variable directly
+  double total_mass;
   /************ end of private fields *************/
 
   // because some algorithms choose different candidates
@@ -285,6 +294,11 @@ static inline int64_t cache_get_occupied_byte_default(const cache_t *cache) {
 static inline int64_t cache_get_n_obj_default(const cache_t *cache) {
   return cache->n_obj;
 }
+
+static inline double cache_get_total_mass_default(const cache_t *cache) {
+  return cache->total_mass;
+}
+
 
 static inline int64_t cache_get_reference_time(const cache_t *cache) {
   return cache->n_req;

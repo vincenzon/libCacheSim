@@ -38,12 +38,15 @@ cache_t *cache_struct_init(const char *const cache_name,
   cache->future_stack_dist_array_size = 0;
   cache->default_ttl = params.default_ttl;
   cache->n_req = 0;
+  cache->total_mass = 0.0;
   cache->to_evict_candidate = NULL;
   cache->to_evict_candidate_gen_vtime = -1;
 
   cache->can_insert = cache_can_insert_default;
   cache->get_occupied_byte = cache_get_occupied_byte_default;
   cache->get_n_obj = cache_get_n_obj_default;
+  cache->get_total_mass = cache_get_total_mass_default;
+
 
   /* this option works only when eviction age tracking
    * is on in config.h */
@@ -268,6 +271,7 @@ cache_obj_t *cache_insert_base(cache_t *cache, const request_t *req) {
   cache->occupied_byte +=
       (int64_t)cache_obj->obj_size + (int64_t)cache->obj_md_size;
   cache->n_obj += 1;
+  cache->total_mass += cache_obj->obj_mass;
 
 #ifdef SUPPORT_TTL
   if (cache->default_ttl != 0 && req->ttl == 0) {
@@ -329,6 +333,7 @@ void cache_remove_obj_base(cache_t *cache, cache_obj_t *obj,
   DEBUG_ASSERT(cache->occupied_byte >= obj->obj_size + cache->obj_md_size);
   cache->occupied_byte -= (obj->obj_size + cache->obj_md_size);
   cache->n_obj -= 1;
+  cache->total_mass -= obj->obj_mass;
   if (remove_from_hashtable) {
     hashtable_delete(cache->hashtable, obj);
   }

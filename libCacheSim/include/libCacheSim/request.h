@@ -23,6 +23,7 @@ typedef struct request {
   uint64_t hv;        /* hash value, used when offloading hash to reader */
   obj_id_t obj_id;
   int64_t obj_size;
+  double obj_mass;
   int32_t ttl;
   req_op_e op;
 
@@ -72,6 +73,7 @@ static inline request_t *new_request(void) {
   request_t *req = my_malloc(request_t);
   memset(req, 0, sizeof(request_t));
   req->obj_size = 1;
+  req->obj_mass = 1;
   req->op = OP_INVALID;
   req->valid = true;
   req->obj_id = 0;
@@ -110,13 +112,13 @@ static inline void free_request(request_t *req) { my_free(request_t, req); }
 
 static inline void print_request(request_t *req) {
 #ifdef SUPPORT_TTL
-  INFO("req clcok_time %lu, id %llu, size %ld, ttl %ld, op %s, valid %d\n",
+  INFO("req clcok_time %lu, id %llu, size %ld, mass %f, ttl %ld, op %s, valid %d\n",
        (unsigned long)req->clock_time, (unsigned long long)req->obj_id,
-       (long)req->obj_size, (long)req->ttl, req_op_str[req->op], req->valid);
+       (long)req->obj_size, req->obj_mass, (long)req->ttl, req_op_str[req->op], req->valid);
 #else
-  printf("req clcok_time %lu, id %llu, size %ld, op %s, valid %d\n",
+  printf("req clcok_time %lu, id %llu, size %ld, mass: %f, op %s, valid %d\n",
          (unsigned long)req->clock_time, (unsigned long long)req->obj_id,
-         (long)req->obj_size, req_op_str[req->op], req->valid);
+         (long)req->obj_size, req->obj_mass, req_op_str[req->op], req->valid);
 #endif
 }
 

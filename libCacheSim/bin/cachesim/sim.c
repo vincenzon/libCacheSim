@@ -41,11 +41,12 @@ void simulate(reader_t *reader, cache_t *cache, int report_interval,
     req_cnt++;
     req_byte += req->obj_size;
     if (cache->get(cache, req) == false) {
-      printf("%lu miss\n", (unsigned long)req->obj_id);
+      printf("%lu miss, %f, %f\n", (unsigned long)req->obj_id, req->obj_mass, cache->get_total_mass(cache));
       miss_cnt++;
       miss_byte += req->obj_size;
+    } else {
+      printf("%lu hit, %f, %f\n", (unsigned long)req->obj_id, req->obj_mass, cache->get_total_mass(cache));
     }
-    printf("%lu hit\n", (unsigned long)req->obj_id);
     if (req->clock_time - last_report_ts >= report_interval &&
         req->clock_time != 0) {
       INFO(

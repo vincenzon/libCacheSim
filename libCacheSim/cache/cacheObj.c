@@ -16,6 +16,7 @@ void copy_cache_obj_to_request(request_t *req_dest,
                                const cache_obj_t *cache_obj) {
   req_dest->obj_id = cache_obj->obj_id;
   req_dest->obj_size = cache_obj->obj_size;
+  req_dest->obj_mass = cache_obj->obj_mass;
   req_dest->next_access_vtime = cache_obj->misc.next_access_vtime;
   req_dest->valid = true;
 }
@@ -27,6 +28,7 @@ void copy_cache_obj_to_request(request_t *req_dest,
  */
 void copy_request_to_cache_obj(cache_obj_t *cache_obj, const request_t *req) {
   cache_obj->obj_size = req->obj_size;
+  cache_obj->obj_mass = req->obj_mass;
 #ifdef SUPPORT_TTL
   if (req->ttl != 0)
     cache_obj->exp_time = req->clock_time + req->ttl;
